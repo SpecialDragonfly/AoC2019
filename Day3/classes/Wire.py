@@ -23,7 +23,3 @@ class Wire:
                 for i in range(0, distance):
                     current_y -= 1
                     self.Locations.append(str(current_x) + "," + str(current_y))
-
-    def locations(self):
-        self.Locations = list(set(self.Locations))
-        return self.Locations
