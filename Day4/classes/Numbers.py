@@ -1,5 +1,6 @@
 import re
 
+from collections import Counter
 
 class Numbers:
     @staticmethod
@@ -11,4 +12,8 @@ class Numbers:
 
     @staticmethod
     def duplicate_number(number):
-        match = re.search(r'(\d)\1', str(number))
+        return re.search(r'(\d)\1', str(number)) is not None
+
+    @staticmethod
+    def counter_thing(number):
+        return Counter(list(str(number))).values()

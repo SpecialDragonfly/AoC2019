@@ -15,19 +15,16 @@ start = 138241
 end = 674034
 print("Initial search space: " + str(end-start))
 
-new_start = 138888  # numbers don't decrease
-new_end = 669999  # numbers don't decrease
-print("Search space: " + str(new_end-new_start))
-
-limits = range(new_start, new_end + 1)  # range is exclusive of the last number
-new_limits = []
-
-for i in filter(Numbers.increasing, limits):
-    new_limits.append(i)
-print("Search space: " + str(len(new_limits)))
-
 limits = []
-for i in new_limits:
-    if Numbers.duplicate_number(i):
-        limits.append(i)
-print("Search space: " + str(len(limits)))
+
+for i in filter(Numbers.increasing, range(start, end + 1)):
+    limits.append(i)
+print("New Search space: " + str(len(limits)))
+
+new_limits = []
+for i in limits:
+    counter = Numbers.counter_thing(i)
+    if 2 in counter:
+        new_limits.append(i)
+
+print("Search space: " + str(len(new_limits)))
