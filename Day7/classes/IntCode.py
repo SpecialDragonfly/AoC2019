@@ -2,6 +2,8 @@ class IntCode:
     def __init__(self, memory):
         self.InstructionPointer = 0
         self.Memory = memory
+        self.Finished = False
+        self.Phase = None
 
     def get_value(self, mode, value):
         if mode == 0:
@@ -77,6 +79,17 @@ class IntCode:
         else:
             self.Memory[location] = 0
 
+    def is_finished(self):
+        return self.Finished
+
+    def set_phase(self, phase):
+        self.Phase = phase
+
+    def get_phase(self):
+        x = self.Phase
+        self.Phase = None
+        return x
+
     def compute(self, initial_input):
         print("Computed with: ", initial_input)
         output = []
@@ -89,7 +102,13 @@ class IntCode:
             elif opcode == 2:
                 self.handle_multiplication(parameter_modes)
             elif opcode == 3:
-                value = initial_input.pop()
+                value = self.get_phase()
+                if value is None:
+                    if len(initial_input) == 0:
+                        # no available input, return the output
+                        return output
+                    else:
+                        value = initial_input.pop()
                 self.handle_input(value)
             elif opcode == 4:
                 x = self.handle_output(parameter_modes)
@@ -103,6 +122,7 @@ class IntCode:
             elif opcode == 8:
                 self.handle_equals(parameter_modes)
             elif opcode == 99:
+                self.Finished = True
                 break
             self.InstructionPointer += 1
         return output
