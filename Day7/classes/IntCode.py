@@ -1,5 +1,6 @@
 class IntCode:
-    def __init__(self, memory):
+    def __init__(self, name, memory):
+        self.Name = name
         self.InstructionPointer = 0
         self.Memory = memory
         self.Finished = False
@@ -91,7 +92,6 @@ class IntCode:
         return x
 
     def compute(self, initial_input):
-        print("Computed with: ", initial_input)
         output = []
         while True:
             instruction = str(self.Memory[self.InstructionPointer]).rjust(5, '0')
