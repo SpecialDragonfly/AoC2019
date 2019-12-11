@@ -22,7 +22,11 @@ class IntCode:
         else:
             return value
 
-    def write_to_memory(self, location, value):
+    def write_to_memory(self, mode, location, value):
+        if mode == 2:
+            location += self.RelativeBase
+        elif mode == 1:
+            print("Mode was 1 when writing")
         self.resize_memory(location)
         self.Memory[location] = value
 
@@ -33,7 +37,7 @@ class IntCode:
         second_value = self.get_value(parameter_modes.pop(), self.Memory[self.InstructionPointer])
         self.InstructionPointer += 1
         location = self.Memory[self.InstructionPointer]
-        self.write_to_memory(location, first_value + second_value)
+        self.write_to_memory(parameter_modes.pop(), location, first_value + second_value)
 
     def handle_multiplication(self, parameter_modes):
         self.InstructionPointer += 1
@@ -42,12 +46,12 @@ class IntCode:
         second_value = self.get_value(parameter_modes.pop(), self.Memory[self.InstructionPointer])
         self.InstructionPointer += 1
         location = self.Memory[self.InstructionPointer]
-        self.write_to_memory(location, first_value * second_value)
+        self.write_to_memory(parameter_modes.pop(), location, first_value * second_value)
 
     def handle_input(self, initial_input, parameter_modes):
         self.InstructionPointer += 1
         location = self.Memory[self.InstructionPointer]
-        self.write_to_memory(location, initial_input)
+        self.write_to_memory(parameter_modes.pop(), location, initial_input)
 
     def handle_output(self, parameter_modes):
         self.InstructionPointer += 1
@@ -78,9 +82,9 @@ class IntCode:
         self.InstructionPointer += 1
         location = self.Memory[self.InstructionPointer]
         if first_value < second_value:
-            self.write_to_memory(location, 1)
+            self.write_to_memory(parameter_modes.pop(), location, 1)
         else:
-            self.write_to_memory(location, 0)
+            self.write_to_memory(parameter_modes.pop(), location, 0)
 
     def handle_equals(self, parameter_modes):
         self.InstructionPointer += 1
@@ -90,9 +94,9 @@ class IntCode:
         self.InstructionPointer += 1
         location = self.Memory[self.InstructionPointer]
         if first_value == second_value:
-            self.write_to_memory(location, 1)
+            self.write_to_memory(parameter_modes.pop(), location, 1)
         else:
-            self.write_to_memory(location, 0)
+            self.write_to_memory(parameter_modes.pop(), location, 0)
 
     def handle_change_relative_base(self, parameter_modes):
         self.InstructionPointer += 1
@@ -114,7 +118,6 @@ class IntCode:
         output = []
         while True:
             instruction = str(self.Memory[self.InstructionPointer]).rjust(5, '0')
-            #  print("instruction", instruction)
             opcode = int(instruction[-2:])
             parameter_modes = list(map(int, list(instruction[:-2])))
             if opcode == 1:
